@@ -69,7 +69,7 @@ export default function GameCanvas({ level, character, background, hearts: initH
     s.distance = 0;
     s.hearts = initHearts;
     s.shieldActive = initShield;
-    s.shieldTimer = initShield ? 25 * 60 : 0;
+    s.shieldTimer = initShield ? 15 * 60 : 0;
     s.gemsCollected = 0;
     s.finished = false;
     s.hitCooldown = 0;
