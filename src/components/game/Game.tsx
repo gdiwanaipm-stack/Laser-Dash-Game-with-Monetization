@@ -95,12 +95,13 @@ export default function Game() {
     if (level >= 5) {
       setScreen('gameComplete');
       clearSave();
+      if (user) syncProgressToDb(user.id, newGems, level);
     } else {
       setScreen('levelComplete');
-      // Save progress
       saveSave({ character: character!, level: level + 1, gems: newGems, backgrounds });
+      if (user) syncProgressToDb(user.id, newGems, level);
     }
-  }, [gems, level, character, backgrounds]);
+  }, [gems, level, character, backgrounds, user]);
 
   const handleNextLevel = useCallback(() => {
     setLevel((l) => l + 1);
