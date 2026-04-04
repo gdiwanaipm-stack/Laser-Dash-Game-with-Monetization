@@ -25,6 +25,7 @@ function clearSave() {
 }
 
 export default function Game() {
+  const { user, signOut } = useAuth();
   const [screen, setScreen] = useState<Screen>('title');
   const [character, setCharacter] = useState<Character | null>(null);
   const [level, setLevel] = useState(1);
