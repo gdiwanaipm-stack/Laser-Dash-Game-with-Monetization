@@ -44,7 +44,7 @@ export default function GameStore({ gems, level, onBuyHeart, onBuyShield, onCont
         <div className="game-card w-64 flex flex-col items-center gap-3">
           <span className="text-5xl">🛡️</span>
           <h3 className="text-xl font-bold text-foreground">Shield</h3>
-          <p className="text-sm text-muted-foreground text-center">Invincible for 20 seconds!</p>
+          <p className="text-sm text-muted-foreground text-center">Invincible for 25 seconds!</p>
           <p className="text-lg font-bold text-accent">💎 30 Gems</p>
           {shieldBought ? (
             <span className="text-game-success font-bold">✓ Purchased</span>
