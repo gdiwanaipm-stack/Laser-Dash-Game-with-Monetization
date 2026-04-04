@@ -35,7 +35,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-8 p-6 bg-background">
-      <h1 className="game-title">Track Racer</h1>
+      <h1 className="game-title">Laser Dash</h1>
       <p className="text-xl text-muted-foreground text-center max-w-md">
         Sign in to save your progress, track gems, and compete! 🏆
       </p>
