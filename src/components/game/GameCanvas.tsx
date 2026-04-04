@@ -48,7 +48,7 @@ export default function GameCanvas({ level, character, background, hearts: initH
     keys: { up: false, down: false, left: false, right: false },
     hearts: initHearts,
     shieldActive: initShield,
-    shieldTimer: initShield ? 20 * 60 : 0, // frames (60fps * 20s)
+    shieldTimer: initShield ? 25 * 60 : 0, // frames (60fps * 25s)
     gemsCollected: 0,
     obstacles: [] as Obstacle[],
     gems: [] as GemItem[],
@@ -69,7 +69,7 @@ export default function GameCanvas({ level, character, background, hearts: initH
     s.distance = 0;
     s.hearts = initHearts;
     s.shieldActive = initShield;
-    s.shieldTimer = initShield ? 20 * 60 : 0;
+    s.shieldTimer = initShield ? 25 * 60 : 0;
     s.gemsCollected = 0;
     s.finished = false;
     s.hitCooldown = 0;
@@ -133,7 +133,7 @@ export default function GameCanvas({ level, character, background, hearts: initH
     s.distance = 0;
     s.hearts = initHearts;
     s.shieldActive = initShield;
-    s.shieldTimer = initShield ? 20 * 60 : 0;
+    s.shieldTimer = initShield ? 25 * 60 : 0;
     s.gemsCollected = 0;
     s.hitCooldown = 0;
     s.startCountdown = 120;
