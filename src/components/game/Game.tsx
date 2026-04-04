@@ -24,6 +24,23 @@ function clearSave() {
   localStorage.removeItem(SAVE_KEY);
 }
 
+async function syncProgressToDb(userId: string, gems: number, level: number) {
+  const { data } = await supabase
+    .from('profiles')
+    .select('gems, highest_level')
+    .eq('user_id', userId)
+    .single();
+
+  if (data) {
+    const updates: Record<string, number> = {};
+    if (gems > data.gems) updates.gems = gems;
+    if (level > data.highest_level) updates.highest_level = level;
+    if (Object.keys(updates).length > 0) {
+      await supabase.from('profiles').update(updates).eq('user_id', userId);
+    }
+  }
+}
+
 export default function Game() {
   const { user, signOut } = useAuth();
   const [screen, setScreen] = useState<Screen>('title');
@@ -37,10 +54,25 @@ export default function Game() {
   const [backgrounds, setBackgrounds] = useState<Background[]>(() => shuffleArray([...BACKGROUNDS]));
   const [hasSave, setHasSave] = useState(false);
 
+  // Load saved state from DB on mount
   useEffect(() => {
     const s = loadSave();
     if (s) setHasSave(true);
-  }, []);
+
+    if (user) {
+      supabase
+        .from('profiles')
+        .select('gems, highest_level')
+        .eq('user_id', user.id)
+        .single()
+        .then(({ data }) => {
+          if (data && !s) {
+            // If no local save, restore gems from DB
+            setGems(data.gems);
+          }
+        });
+    }
+  }, [user]);
 
   const resumeGame = useCallback(() => {
     const s = loadSave();
@@ -78,12 +110,13 @@ export default function Game() {
     if (level >= 5) {
       setScreen('gameComplete');
       clearSave();
+      if (user) syncProgressToDb(user.id, newGems, level);
     } else {
       setScreen('levelComplete');
-      // Save progress
       saveSave({ character: character!, level: level + 1, gems: newGems, backgrounds });
+      if (user) syncProgressToDb(user.id, newGems, level);
     }
-  }, [gems, level, character, backgrounds]);
+  }, [gems, level, character, backgrounds, user]);
 
   const handleNextLevel = useCallback(() => {
     setLevel((l) => l + 1);
