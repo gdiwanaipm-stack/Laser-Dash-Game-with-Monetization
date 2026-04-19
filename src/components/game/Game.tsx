@@ -212,12 +212,15 @@ export default function Game() {
         </div>
 
         <h1 className="game-title">Laser Dash</h1>
-        {unlocked && (
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/15 border border-accent/30 text-accent text-sm font-semibold">
-            <span aria-hidden>✓</span>
-            <span>Levels 3-5 unlocked</span>
+        {unlocked ? (
+          <div className="flex flex-col items-center gap-2">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/15 border border-accent/30 text-accent text-sm font-semibold">
+              <span aria-hidden>💛</span>
+              <span>Thanks for supporting development!</span>
+            </div>
+            <p className="text-xs text-muted-foreground">All 5 levels unlocked</p>
           </div>
-        )}
+        ) : null}
         <p className="text-xl text-muted-foreground text-center max-w-md">
           Race through 5 epic levels, dodge deadly lasers, collect gems, and become the ultimate champion! 🏆
         </p>
@@ -228,6 +231,28 @@ export default function Game() {
           {hasSave && (
             <button onClick={() => { playSelect(); resumeGame(); }} className="game-btn-secondary">
               ▶️ Continue
+            </button>
+          )}
+          {!unlocked && user && (
+            <button
+              onClick={async () => {
+                playSelect();
+                await refreshUnlock();
+                const { data } = await supabase
+                  .from('game_unlocks')
+                  .select('id')
+                  .eq('user_id', user.id)
+                  .eq('product', 'level_3_unlock')
+                  .maybeSingle();
+                if (data) {
+                  toast({ title: 'Purchase restored! 💛', description: 'Levels 3-5 are unlocked on this device.' });
+                } else {
+                  toast({ title: 'No purchase found', description: 'No unlock is associated with this account yet.', variant: 'destructive' });
+                }
+              }}
+              className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-4 transition-colors mt-2"
+            >
+              Restore purchase
             </button>
           )}
         </div>
