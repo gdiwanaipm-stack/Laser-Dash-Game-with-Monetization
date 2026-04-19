@@ -165,6 +165,7 @@ export default function Game() {
     if (gems >= 30) { setGems((g) => g - 30); setHasShield(true); setShieldBought(true); }
   }, [gems]);
 
+  const renderScreen = () => {
   // Title Screen
   if (screen === 'title') {
     const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Racer';
@@ -288,4 +289,18 @@ export default function Game() {
   }
 
   return null;
+  };
+
+  return (
+    <>
+      {renderScreen()}
+      {showCheckout && user && (
+        <UnlockCheckout
+          userId={user.id}
+          customerEmail={user.email ?? undefined}
+          onClose={() => setShowCheckout(false)}
+        />
+      )}
+    </>
+  );
 }
