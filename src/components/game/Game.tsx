@@ -94,6 +94,20 @@ export default function Game() {
     }
   }, [refreshUnlock]);
 
+  // After unlock is granted, if we were waiting on the paywall, proceed
+  useEffect(() => {
+    if (unlocked && showCheckout) {
+      setShowCheckout(false);
+      if (character) {
+        setHearts(1);
+        setHasShield(false);
+        setHeartBought(false);
+        setShieldBought(false);
+        setScreen('store');
+      }
+    }
+  }, [unlocked, showCheckout, character]);
+
   const resumeGame = useCallback(() => {
     const s = loadSave();
     if (s) {
