@@ -3,6 +3,7 @@ import { Character, Background, Screen, BACKGROUNDS, CHARACTER_EMOJI, CHARACTER_
 import { playSelect, playWin } from '@/lib/gameAudio';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 import CharacterSelect from './CharacterSelect';
 import GameStore from './GameStore';
 import GameCanvas from './GameCanvas';
@@ -82,6 +83,7 @@ export default function Game() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('checkout') === 'success') {
+      toast({ title: 'Thank you! 💛', description: 'Your charity donation was received. Unlocking levels 3-5…' });
       const tryRefresh = (n = 0) => {
         refreshUnlock();
         if (n < 6) setTimeout(() => tryRefresh(n + 1), 1000);
@@ -95,6 +97,15 @@ export default function Game() {
   const resumeGame = useCallback(() => {
     const s = loadSave();
     if (s) {
+      // Entitlement check on resume — if save is at level 3+ and unlock missing, gate it
+      if (s.level >= 3 && !unlocked) {
+        setCharacter(s.character);
+        setLevel(s.level);
+        setGems(s.gems);
+        setBackgrounds(s.backgrounds);
+        setShowCheckout(true);
+        return;
+      }
       setCharacter(s.character);
       setLevel(s.level);
       setGems(s.gems);
@@ -105,7 +116,7 @@ export default function Game() {
       setShieldBought(false);
       setScreen('store');
     }
-  }, []);
+  }, [unlocked]);
 
   const startNew = useCallback(() => {
     clearSave();
